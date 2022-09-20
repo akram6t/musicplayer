@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+        integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Music Player</title>
+
+    <style>
+        body {
+            font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande",
+                "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+        }
+
+        * {
+            margin: 0;
+        }
+
+        .main {
+            width: 100vw;
+            height: 100vh;
+            background-color: aliceblue;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .music_player {
+            max-width: 300px;
+            padding: 30px;
+            background-color: white;
+            text-align: center;
+            border-radius: 20px;
+            box-shadow: 0px 0px 10px 5px #bcbcbc;
+        }
+
+        #name {
+            text-shadow: 1px 1px 5px #bcbcbc;
+        }
+
+        #artist {
+            margin-top: 8px;
+        }
+
+        img {
+            width: 200px;
+            height: 200px;
+            border-radius: 100px;
+            object-fit: cover;
+            object-position: center;
+            box-shadow: 0px 0px 10px 5px #bcbcbc;
+            margin-top: 15px;
+        }
+
+        .duration_container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 15px;
+        }
+
+        .controlls {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            margin-top: 25px;
+        }
+
+        .controlls div {
+            width: 25px;
+            height: 25px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 100px;
+            cursor: pointer;
+        }
+
+        .controlls .btnPlay {
+            width: 30px;
+            height: 30px;
+            background-color: black;
+            color: white;
+            box-shadow: 0px 0px 5px 2px #bcbcbc inset;
+        }
+
+        .controlls .btnleftright:hover {
+            opacity: 0.5;
+        }
+
+        .controlls .btnPlay:hover {
+            background-color: white;
+            color: black;
+        }
+
+        /* Animation image */
+        .anime {
+            animation: imgAnime 3s infinite;
+            animation-timing-function: linear;
+        }
+
+        @keyframes imgAnime {
+            form {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ProgressBar Container */
+
+        .progress_container {
+            margin-top: 10px;
+        }
+
+        .progressbar {
+            border-radius: 25px;
+            background-color: aliceblue;
+            border-radius: 0px 0px 5px 2px #bcbcbc;
+            cursor: pointer;
+        }
+
+        .progress {
+            height: 5px;
+            background-color: black;
+            width: 0%;
+            border-radius: 25px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <div class="music_player">
+            <h1 id="name">Legend Never Die Song Name</h1>
+            <h3 id="artist">Artist</h3>
+            <img id="coverImage"
+                src="https://cdn.britannica.com/03/151903-131-E310E9EC/Microphone-background-sound-waves-energy-Music.jpg"
+                alt="" />
+            <audio id="audio_player" src="songs/song2.mp3"></audio>
+            <div class="duration_container">
+                <div id="cur_duration">2:34</div>
+                <div id="duration">4:34</div>
+            </div>
+            <div class="progress_container">
+                <div id="progress_div" class="progressbar">
+                    <div id="prog" class="progress"></div>
+                </div>
+            </div>
+            <div class="controlls">
+                <div id="prev" class="btnleftright">
+                    <i class="fas fa-backward"></i>
+                </div>
+                <div id="play" class="btnPlay">
+                    <i id="classchange" class="fas fa-play"></i>
+                </div>
+                <div id="next" class="btnleftright">
+                    <i class="fas fa-forward"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const songList = [
+            {
+                id: 1,
+                name: "Song 1",
+                artist: "artist 1",
+                coverimage:
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQfMfW6Gb7hyUlCXwAcaPEdBVhSUYkp7Inwc_0lHku_JJ1vdIPQ8bf4gyqXRT_ZVnkXo-I&usqp=CAU",
+                songsource: "songs/song1.mp3",
+            },
+            {
+                id: 1,
+                name: "Song 2",
+                artist: "artist 2",
+                coverimage:
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTCorAdcjgA2soZz9-Jr-ODAKPni470OSQES5NqRa1P1SJvCBDKUXQ-7XG-LNQl0IZpQBc&usqp=CAU",
+                songsource: "songs/song2.mp3",
+            },
+            {
+                id: 1,
+                name: "Song 3",
+                artist: "artist 3",
+                coverimage:
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTdMsF6SIWaprRHbqXc-hKDKYc6Lqiso8fsF82cYXXPXdijtgku4ZCsZJ31CPGTR5RidJA&usqp=CAU",
+                songsource: "songs/song3.mp3",
+            },
+            {
+                id: 1,
+                name: "Song 4",
+                artist: "artist 5",
+                coverimage:
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROjACp1duc-chlaun_oFKNjUhKoNc9SE8urtva8NLZgqtQp0B8ox2lv2fTtcKBq_hLhQE&usqp=CAU",
+                songsource: "songs/song4.mp3",
+            },
+            {
+                id: 1,
+                name: "Song 5",
+                artist: "artist 5",
+                coverimage:
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5P4ky2ieWctWglyhVIZXWiU5-06om23psxG7WDW0u_lyWxgJ1N36nr62z1BdNlM5K_tc&usqp=CAU",
+                songsource: "songs/song5.mp3",
+            },
+        ];
+
+        const audio = document.querySelector("#audio_player");
+        const playpausebtn = document.getElementById("classchange");
+        const btnPlay = document.getElementById("play");
+        const btnPrev = document.getElementById("prev");
+        const btnNext = document.getElementById("next");
+        const songName = document.getElementById("name");
+        const artist = document.getElementById("artist");
+        const image = document.getElementById("coverImage");
+        const curDur = document.getElementById("cur_duration");
+        const fullDuration = document.getElementById("duration");
+        const progressbarDiv = document.getElementById('progress_div');
+        const progressBar = document.getElementById("prog");
+
+        var isplaying = true;
+
+        btnPlay.addEventListener("click", () => {
+            if (!isplaying) {
+                audio.play();
+                playpausebtn.classList.replace("fa-play", "fa-pause");
+                image.classList.add("anime");
+                isplaying = true;
+            } else {
+                audio.pause();
+                playpausebtn.classList.replace("fa-pause", "fa-play");
+                image.classList.remove("anime");
+                isplaying = false;
+            }
+        });
+
+        var index = 0;
+
+        const loadSongs = (songs) => {
+            songName.innerHTML = songs.name;
+            artist.innerHTML = songs.artist;
+            audio.src = songs.songsource;
+            image.src = songs.coverimage;
+            playpausebtn.classList.replace("fa-play", "fa-pause");
+            image.classList.add("anime");
+            audio.play();
+            isplaying = true;
+        };
+
+        loadSongs(songList[index]);
+        playpausebtn.classList.replace("fa-pause", "fa-play");
+        image.classList.remove("anime");
+        isplaying = false;
+
+        const prevSong = () => {
+            index = (index + (1 % songList.length)) % songList.length;
+            loadSongs(songList[index]);
+        };
+        const nextSong = () => {
+            index = (index + 1) % songList.length;
+            loadSongs(songList[index]);
+        };
+
+        audio.addEventListener("timeupdate", (event) => {
+            const { currentTime, duration } = event.srcElement;
+
+            var min_duration = Math.floor(duration / 60);
+            var sec_duration = Math.floor(duration % 60);
+
+            var min_cur_duration = Math.floor(currentTime / 60);
+            var sec_cur_duration = Math.floor(currentTime % 60);
+
+            if (currentTime && duration) {
+                if (sec_duration < 10) {
+                    sec_duration = "0" + sec_duration;
+                }
+                if (sec_cur_duration < 10) {
+                    sec_cur_duration = "0" + sec_cur_duration;
+                }
+
+                curDur.innerHTML = `${min_cur_duration}:${sec_cur_duration}`;
+                fullDuration.innerHTML = `${min_duration}:${sec_duration}`;
+            }
+
+            let currentProgressBar = (currentTime / duration) * 100;
+            prog.style.width = `${currentProgressBar}%`;
+        });
+
+        audio.addEventListener('ended', nextSong);
+
+        // progressbar change
+        progressbarDiv.addEventListener('click', (event) => {
+            const duration = audio.duration;
+            const move_progress = (event.offsetX / event.srcElement.clientWidth) * duration;
+            audio.currentTime = move_progress;
+        });
+
+        btnPrev.addEventListener("click", prevSong);
+        btnNext.addEventListener("click", nextSong);
+    </script>
+</body>
+
+</html>
